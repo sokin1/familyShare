@@ -1,0 +1,13 @@
+Purpose
+    Test basic login process
+
+Behaviour
+    User attempts to login with correct/incorrect id and password
+        For incorrect information, login is not allowed and show proper error messages
+        For correct information, login is successful and user will see his main group pages.
+            If user doesn't set the main group, he will be FamilyShare's page.
+
+Actors
+    User : sokin1(main group is testGroup), sokin2(no main group is set)
+    Group : testGroup(sokin1 is owner)
+    Posts : 1 post without comments

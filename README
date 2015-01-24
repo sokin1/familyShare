@@ -1,0 +1,83 @@
+Tickets
+
+# *1. Authenticator does only authenticate user.
+# *2. New GroupManager will retrieve group information.
+# *3. New PostManager will retrieve Post items.
+# *4. FileManger should be implemented.
+#  1. Prepare php scripts for setting up dbs.
+#  2. Prepare php scripts for storing db data to files.
+#  3. Signup Process established including setup procedures.
+#  4. Login Process established including the case where no main group is initialized.
+#  5. Main page design
+#  6. Cookie preserved throughout connections
+#  7. Use plain( ciphered in the future ) text file for matching users with groups.
+#  8. Group, Post classes creation
+#  9. Make clean login and signup procedure.( 30% Done, signup is relatively smooth )
+# 10. Simplified query requests.
+
+PostLists formats
+
+filename => no formats for filename(generated randomly)
+contents =>
+    [newest post's filename]
+    [second newest post's filename]
+    ...
+    [oldest post's filename]
+--
+Post formats
+
+filename => [groupname]_[postedDate]:[postedTime].post
+contents =>
+    <Writer>[wirter's userid]</Writer>
+    <Subject>[post's subject]</Subject>
+    <postBody>
+        [post's body]
+        use <<>> for embedded images
+    </postBody>
+    <comments>
+        <comment></comment> // images are not allowed for now
+        </comment></comment>
+        ...
+    </comments>
+--
+Cookie formats
+
+userid : [userid],
+password : [password],
+mainGroup : [mainGroup],
+postsFile : [postsFileName],
+lastlogin : [lastlogininfo],
+verified : [true/false],
+lastModified : [date type]
+
+    ->constructed when user is logged in
+    ->destructed when user is intentionally logged out
+    ->shouldn't be destructed if user just closes web browser
+    ->if userid and password is set, it will send server for login directly.
+    ->if not or userid and password is not matched, initial page will be loaded
+--
+DB Formats
+
+Group
+    groupName
+    groupId(primary key)
+    Owner(foreign key)
+    createdAt
+    *UserListFile(encrypted random filename)
+    *PostListFile(encrypted random filename)
+
+User
+    email
+    password(encrypted)
+    userId(primary key)
+    mainGroup(foreign key)
+    lastLogin
+--
+UserListFile
+    - no format in filename(generated randomly)
+    - group owner is at the top
+    - listed userId as the order of sign up
+--
+User Design
+    - no friends or follower concepts
+    - users can only talk to each other through their group

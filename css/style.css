@@ -1,0 +1,70 @@
+html {
+    margin : 0px;
+}
+
+body {
+    margin : 0px;
+}
+
+.header {
+    height : 5%;
+    background-color : GREEN;
+    margin : 0px;
+}
+
+.content {
+    height : 90%;
+}
+
+.groupContent {
+    height : 90%;
+}
+
+.groupContent div {
+    float : left;
+}
+
+.leftSideBar {
+    width : 5%;
+    height : 100%;
+}
+
+.contentCenter {
+    width : 90%;
+    height : 100%;
+}
+
+.rightSideBar {
+    width : 5%;
+    height : 100%;
+}
+
+.footer {
+    height : 5%;
+    background-color : GREEN;
+    margin : 0px;
+}
+
+#login {
+    display : inline;
+    margin : 0px;
+    padding : 0px;
+}
+
+#loginForm {
+    float : right;
+}
+
+#signup {
+    width : 300px;
+    height : 100px;
+    margin-left : 70%;
+    margin-top : 30%;
+    border : 2px solid;
+    border-radius : 25px;
+}
+
+#signupForm {
+    margin-left : 2%;
+    margin-top : 3%; 
+}

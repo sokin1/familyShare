@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+    </head>
+    <body>
+        <div class="header">
+            <form id="loginForm" action="/" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="type" value="login" />
+                Email : <input type="text" name="email" />
+                Password : <input type="password" name="password" />
+                <input type="submit" value="Log In" />
+            </form>
+        </div>
+        <div class="content">
+            <div id="signup">
+                <form id="signupForm" action="/" enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="type" value="signup" />
+                    <% if( errorNo == 1001 || errorNo == 1002 ) { %>
+                        <font color="RED">Email</font> : <input type="email" name="email" />
+                    <% } else { %>
+                        Email : <input type="email" name="email" />
+                    <% } %>
+                    </br>
+
+                    <% if( errorNo == 1002 ) { %>
+                        <font color="RED">Password</font> : <input type="password" name="password" />
+                    <% } else { %>
+                        Password : <input type="password" name="password" />
+                    <% } %>
+                    </br>
+
+                    <% if( errorNo == 1000 ) { %>
+                        <font color="RED">Re-enter Password</font> : <input type="password" name="re_typed_password" />
+                    <% } else { %>
+                        Re-enter Password : <input type="password" name="re_typed_password" />
+                    <% } %>
+                    </br>
+                    <input type="submit" value="Sign up" />
+                </form>
+            </div>
+        </div>
+        <div class="footer">
+            FOOTER
+        </div>
+    </body>
+</html>
