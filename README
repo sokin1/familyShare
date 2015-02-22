@@ -1,5 +1,8 @@
 Tickets
 
+URGENT 1. FileManager should be implemented and tested.(including Hash filename)
+URGENT 2. Make connections between packages(Whether it works or not)
+URGENT 3. Make testing scripts for sign up, login, get group info, and post
 # *1. Authenticator does only authenticate user.
 # *2. New GroupManager will retrieve group information.
 # *3. New PostManager will retrieve Post items.
@@ -15,31 +18,6 @@ Tickets
 #  9. Make clean login and signup procedure.( 30% Done, signup is relatively smooth )
 # 10. Simplified query requests.
 
-PostLists formats
-
-filename => no formats for filename(generated randomly)
-contents =>
-    [newest post's filename]
-    [second newest post's filename]
-    ...
-    [oldest post's filename]
---
-Post formats
-
-filename => [groupname]_[postedDate]:[postedTime].post
-contents =>
-    <Writer>[wirter's userid]</Writer>
-    <Subject>[post's subject]</Subject>
-    <postBody>
-        [post's body]
-        use <<>> for embedded images
-    </postBody>
-    <comments>
-        <comment></comment> // images are not allowed for now
-        </comment></comment>
-        ...
-    </comments>
---
 Cookie formats
 
 userid : [userid],
@@ -72,12 +50,47 @@ User
     userId(primary key)
     mainGroup(foreign key)
     lastLogin
---
-UserListFile
-    - no format in filename(generated randomly)
-    - group owner is at the top
-    - listed userId as the order of sign up
+
 --
 User Design
     - no friends or follower concepts
     - users can only talk to each other through their group
+
+
+--
+UserFile Format( be encrypted later )
+
+<userid></userid>
+<createdAt></createdAt>
+<groupList>
+    <group></group>
+    <group></group>
+    <group></group>
+    ...
+</groupList>
+<posts>
+    <post></post>
+    <post></post>
+    <post></post>
+    <post></post>
+    ....
+</posts>
+
+--
+GroupFile Format( be encrypted later )
+
+<groupid></groupid>
+<createdAt></createdAt>
+<owner></owner>
+<memberList>
+    <member></member>
+    <member></member>
+    <member></member>
+    ...
+</memberList>
+<posts>
+    <post></post>
+    <post></post>
+    <post></post>
+    ...
+</posts>

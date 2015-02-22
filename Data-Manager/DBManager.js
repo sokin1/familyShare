@@ -14,6 +14,10 @@ function DBManager() {
         if( err ) throw err;
     });
 
+    this.request = function() {
+        
+    }
+
     this.getUserInfo = function( userInfo, callback ) {
         var key1 = userInfo['ID'];
         var key2 = userInfo['password'];
@@ -55,12 +59,6 @@ function DBManager() {
 
     this.setGroupInfo = function( group ) {
     }
-
-    this.postNewItem = function( user, group, item ) {
-    }
-
-    this.getItems = function( group ) {
-    }
 }
 
-module.exports = DBManager;
+exports.DBManager = DBManager;
