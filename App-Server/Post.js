@@ -14,7 +14,7 @@
 //			2
 //			...
 
-function Post(uname, gname, when, title, contents ) {
+function Post( uname, gname, when, title, contents ) {
 	var author = uname
 	var groupname = gname
 	var createdAt = when
