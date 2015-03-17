@@ -1,11 +1,19 @@
 // RULE : NO ACCESS TO DB from FileManager. It only accesses to file
-var contentGenerator = require( "/App-Server/ContentGenerator" );
+var fileContentManager = require( "/DataDirector/FileContentManager" );
 var cypherManager = require( "/App-Server/CypherManager" );
 var fs = require( 'fs' );
 
 function FileManager() {
-	var buildFileName = function( userInfo ) {
+	var buildFileName = function( info ) {
+        if( info isinstanceof User ) {
+            var fileName = info.getUserId() + "_" + info.getCreatedAt() + ".usr";
+            var pin = info.getPassword();
+        } else if( info isinstanceof Group ) {
+            var fileName = info.getGroupId() + "_" + info.getCreatedAt() + ".grp";
+            var pin = info.getGroupName();
+        }
 
+        return cryptoManager.encryptString( fileName, pin );
 	}
 
 	this.createFileForUser = function( userInfo, callback ) {
@@ -18,8 +26,8 @@ function FileManager() {
 		//		2. Filename is going to be the unique id of the post file.
 		//		3. And this filename is updated on the group file and user file.
 
-		var contents = contentGenerator.getUserFileContents( userInfo );
-		var filename = cryptoManager.encryptString( buildFileName );
+		var contents = fileContentManager.getUserFileContents( userInfo );
+		var filename = buildFileName( userInfo );
 		fs.writeFile( "/usr/meta/" + filename, contents, function( err ) {
 			if( err ) {
 				callback( null, err );
