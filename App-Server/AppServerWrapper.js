@@ -1,10 +1,9 @@
 var RequestHandler = require( "./RequestHandler" );
-var GroupManager = require( "./RequestHandler" );
+var GroupManager = require( "./GroupManager" );
 var PostManager = require( "./PostManager" );
 var DBManager = require( "./DBManager" );
 var FileManager = require( "./FileManager" );
-var Authenticator = require( "./Authenticator" );
-var Canvas = require( "./Canvas" );
+var UserManager = require( "./UserManager" );
 
 function AppServerWrapper() {
     var requestHandler = new RequestHandler();
@@ -12,8 +11,7 @@ function AppServerWrapper() {
     var postManager = new PostManager();
     var DBManager = new DBManager();
     var fileManager = new FileManager();
-    var authenticator = new Authenticator( DBManager );
-    var canvas = new Canvas();
+    var userManager = new UserManager();
 
     function stylesheet( response, pathname, canvas ) {
         canvas.renderStylesheet( response, pathname );

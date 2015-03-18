@@ -1,5 +1,3 @@
-var Error = require( "./classes/Error" );
-
 function parseCookies( request ) {
     var list = {},
         rc = request.headers.cookie;
@@ -12,14 +10,15 @@ function parseCookies( request ) {
     return list;
 }
 
-function route( pathname, response, request, app_server, distributor ) {
+function route( pathname, response, request, app_server, distributor, canvas ) {
     console.log( "About to route a request for " + pathname );
     if( pathname.indexOf( ".css" ) != -1 ) {
+        // TODO: call canvas function directly not via app_server
         app_server.stylesheet( response, pathname, canvas );
     }
 
     var cookie = parseCookies( request );
-    distributor.distribute( pathname, cookie );
+    distributor.distribute( request, pathname, cookie );
 }
 
 exports.route = route;
