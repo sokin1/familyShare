@@ -5,7 +5,7 @@ function ServiceDistributor( appserver ) {
     
     var requestData = '';
 
-    function distributor( request, pathname, cookie ) {
+    this.distribute = function ( request, pathname, cookie ) {
         // TODO : Why do I need "cookie" here?
         request.on( 'data', function( data ) {
             requestData += data.toString();
