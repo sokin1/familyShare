@@ -12,10 +12,6 @@ function AppServerWrapper() {
     var DBManager = new DBManager();
     var fileManager = new FileManager();
     var userManager = new UserManager();
-
-    function stylesheet( response, pathname, canvas ) {
-        canvas.renderStylesheet( response, pathname );
-    }
 }
 
 exports.AppServerWrapper = AppServerWrapper;
