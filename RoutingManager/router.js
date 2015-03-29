@@ -4,7 +4,7 @@ function route( pathname, response, request, distributor ) {
         distributor.stylesheetHandler( response, pathname );
     }
 
-    distributor.distribute( request, pathnam );
+    distributor.distribute( response, request, pathname );
 }
 
 exports.route = route;

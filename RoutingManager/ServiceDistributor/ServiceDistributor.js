@@ -1,56 +1,31 @@
-var FormExtractor = require( "./helper/FormExtractor" );
-
-function parseCookies( request ) {
-    var list = {},
-        rc = request.headers.cookie;
-
-    rc && rc.split(';').forEach( function( cookie ) {
-        var parts = cookie.split( '=' );
-        list[parts.shift().trim()] = decodeURI( parts.join( '=' ) );
-    });
-
-    return list;
-}
+var FormExtractor = require( "/helper/FormExtractor" );
+var CookieParser = require( "/helper/CookieParser" );
+var Services = require( "./Services.js" );
 
 function ServiceDistributor( appserver, canvas ) {
     var appServer = appserver;
     var painter = canvas;
-    
+
     var requestData = '';
 
     this.stylesheetHandler = function( response, pathname ) {
         painter.renderStylesheet( response, pathname );
     }
 
-    this.distribute = function ( request, pathname ) {
+    this.distribute = function ( response, request, pathname ) {
+        // TODO : Design decision : Getting cookie here? or in each services.
         var cookies = parseCookies( request );
 
-        if( pathname ) {
-
-            request.on( 'data', function( data ) {
-                requestData += data.toString();
-            });
-
-            request.on( 'end', function() {
-                if( requestData == '' ) {
-                    return ["R1000", null];     // Start
-                }
-
-                var extractor = new FormExtractor( requestData );
-                var extractedInfo = extractor.extract();
-
-                if( extractedInfo['type'] == 'start' ) {
-                    return ["R1000", null];     // Start
-                } else if( extractedInfo['type'] == 'signup' ) {
-                    return ["R1001", extractedInfo['values']];
-                } else if( extractedInfo['type'] == 'login' ) {
-                    return ["R1002", extractedInfo['values']];
-                } else if( extractedInfo['type'] == 'setup' ) {
-                    return ["R1003", extractedInfo['values']];
-                }
+        // TODO : Eliminate the use of pathname, use cookie and request parameters instead.
+        if( Services[pathname] != null ) {
+            Services[pathname]( request, pathname, appserver, function( retVal ) {
+                // DESC : This is the big picture of the application distributor.
+                // It doesn't need to know which service is launched,
+                // and just do the service and return the retVal to paint the result.
+                painter.renderPage( response, retVal );
             });
         } else {
-            painter.renderMain( response );
+            painter.renderUnknownPage( response );
         }
     }
 }
