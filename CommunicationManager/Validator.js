@@ -16,22 +16,23 @@ function Validator() {
 		return false;
 	}
 
-	this.validateSignup = function( newUser, passwd, retypedPasswd, callback ) {
+	this.validateSignup = function( newUser, passwd, retypedPasswd ) {
 		// TODO : Signup is done here.
 		// 		: 1. Check email is in valid format.
 		if( emailValidator( newUser.getUserId ) == false ) {
 			// Invalid
-			callback( new Error( "InvalidEmailFormat" ) );
+			return new Error( "InvalidEmailFormat" );
 		} else {
 		//		: 2. Check two passwords are matched.
 			if( passwordValidator( passwd, retypedPasswd ) == false ) callback( new Error( "PasswordMisMatched" ) );
-		//		: 3. Access to dbmanager for checking duplicated user
-		//		: 4. If all clear, create new user info in the db.
 			// TODO : Do encryption here for passwd.
 			var cryptoManager = new CryptoManager();
 			var encryptedPasswd = cryptoManager.encryptPasswd( newUser.getUserId(), newUser.getCreatedAt(), passwd );
-		//		: 5. call filemanager for create new user files.
-		//		: 6. return signup response, if 1-3 is not clear, it comes here directly.
+
+			newUser.setPassword( encryptedPasswd );
+			newUser.setConCondition( "SIGNUP_VALIDATED" );
+
+			return newUser;
 		}
 	}
 

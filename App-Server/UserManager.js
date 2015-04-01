@@ -34,14 +34,29 @@ function UserManager() {
 	var signup = function( extractedInfo, cookies, appserver, callback ) {
 		var newUser = new User( extractedInfo['userId'], 'now', null, null, 0, null );
 		var validator = new Validator();
-		validator.validateSignup(  newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'], function( res ) {
-			if( res isInstanceof( Error ) ) {
-				callback( res );
-			} else {
-				// TODO : Write info on the cookie to avoid multiple db access.
-				callback( res );
-			}
-		});
+		var valid = validator.validateSignup( newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'] );
+		if( valid instanceof User ) {
+			// valid should be the instance of User with updated password.
+			// TODO : Access to db to check duplicates and registration.
+			// 		: For testing purpose, db functions will be replaced with mock functionality.
+			appserver.dbManager.setUserInfo( valid, function( res ) {
+				if( res instanceof User ) {
+					// TODO : call filemanager and create file for user user.
+					//		: newUser is updated if registration is succeeded.
+					// 		: same as dbManager, replaced with mock functionality.
+					appserver.fileManager.createFileForUser( res, function( res ) {
+						// Should update user infomation more specifically.
+						// TODO : Indicate his status to let the server know what should be done when he connects next time.
+						// 		: also write the user infomation on the cookie 
+						callback( res );
+					});
+				} else {
+					callback( res );
+				}
+			});
+		} else {
+			callback( res );
+		}
 	}
 
 	var login = function( extractedInfo, cookies, appserver, callback ) {

@@ -16,7 +16,7 @@ function FileManager() {
         return cryptoManager.encryptString( fileName, pin );
 	}
 
-	this.createFileForUser = function( userInfo, callback ) {
+	this.createFileForUser = function( newUser, callback ) {
 		// create post file for new user.
 		// File name is acquired by hash username(email) additional information.
 		// This file is used to get posts for user-related pages.
@@ -27,12 +27,12 @@ function FileManager() {
 		//		3. And this filename is updated on the group file and user file.
 
 		var contents = fileContentManager.getUserFileContents( userInfo );
-		var filename = buildFileName( userInfo );
+		var filename = buildFileName( newUser );
 		fs.writeFile( "/usr/meta/" + filename, contents, function( err ) {
 			if( err ) {
-				callback( null, err );
+				callback( err );
 			} else {
-				callback( filename, null );
+				callback( filename );
 			}
 		});
 	}
