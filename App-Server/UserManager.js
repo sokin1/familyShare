@@ -34,12 +34,14 @@ function UserManager() {
 	var signup = function( extractedInfo, cookies, appserver, callback ) {
 		var newUser = new User( extractedInfo['userId'], 'now', null, null, 0, null );
 		var validator = new Validator();
-		validator.validateSignup(  newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'], function( res ) {
+		validator.validateSignupInfo( newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'], function( res ) {
 			if( res isInstanceof( Error ) ) {
 				callback( res );
 			} else {
 				// TODO : Write info on the cookie to avoid multiple db access.
-				callback( res );
+				appserver.dbManager.processSignup( newUser, res.getItem()['passwd'], function( res ) {
+					callback( res );
+				});
 			}
 		});
 	}

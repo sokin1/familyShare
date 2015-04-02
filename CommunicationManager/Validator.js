@@ -11,7 +11,7 @@ function Validator() {
 
 	var.passwordValidator = function( passwd, retypedPasswd ) {
 		if( passwd == retypedPasswd ) {
-			return encryptedPasswd;
+			return true;
 		}
 		return false;
 	}
@@ -36,6 +36,11 @@ function Validator() {
 	}
 
 	this.validateLogin = function( user, passwd, callback ) {
-
+        if( emailValidator( user.getUserId ) == false ) {
+            callback( new Error( "InvalidEmailFormat" ) );
+        } else {
+            var cryptoManager = new CryptoManager();
+            var encryptedPasswd = cryptoManager.encryptPasswd( user.getUserId(), user.getCreatedAt(), passwd );
+        }
 	}
 }

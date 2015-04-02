@@ -9,7 +9,7 @@ function AppServerWrapper() {
     var requestHandler = new RequestHandler();
     var groupManager = new GroupManager();
     var postManager = new PostManager();
-    var DBManager = new DBManager();
+    var dbManager = new DBManager();
     var fileManager = new FileManager();
     var userManager = new UserManager();
 }
