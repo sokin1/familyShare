@@ -36,18 +36,22 @@ function DBManager() {
         });
     }
 
-    this.setUserInfo = function( newUserInfo, callback ) {
-        var post = { userName : newUserInfo['ID'], password : newUserInfo['password'] };
+    this.setUserInfo = function( newUser, callback ) {
+        var post = { userName : newUser['ID'], password : newUser['password'] };
         var key = userId;
 
         db.query( 'SELECT * FROM User WHERE userName = ?', [key], function( err, rows, fields ) {
             if( err ) callback( err, null );
             if( rows.length >= 1 ) {
-                callback( null, Error( "Existing User" ) );
+                callback( new Error( "Existing User" ) );
             } else {
                 db.query( 'INSERT INTO User SET ?', post, function( err, result ) {
-                    if( err ) callback( err, null );
-                    else callback( null, result );
+                    if( err ){
+                        callback( err );
+                    } else {
+                        newUser.setConCondition( "SIGNUP_REGISTERED" );
+                        callback( newUser );
+                    }
                 });
             }
         });
