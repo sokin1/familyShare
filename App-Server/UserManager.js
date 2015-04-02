@@ -2,6 +2,8 @@ var rtnType = require( "/type/ReturnType.js" );
 var errType = require( "/type/ErrorType.js" );
 var CookieParser = require( "/helper/CookieParser.js" );
 
+// TODO : Delete ServiceDispatcher.
+//		: 
 function UserManager() {
 	this.serviceDispatcher = function( request, pathname, appserver, callback ) {
 		var cookies = CookieParser.parseCookies( request );
@@ -15,9 +17,12 @@ function UserManager() {
             var extractedInfo = extractor.extract( requestData );
 
 			if( pathname == 'signup' ) {
-				signup( extractedInfo, cookies, appserver, function() {
-					var retVal;
-					callback( retVal );
+				signup( extractedInfo, cookies, appserver, function( newUser ) {
+					if( newUser instanceof User ) {
+						CookieParser.updateCookies( request, newUser );
+					} else {
+						callback( retVal );
+					}
 				});
 			} else if ( pathname == 'login' ) {
 				login( extractedInfo, cookies, appserver, function() {
@@ -26,7 +31,7 @@ function UserManager() {
 				});
 			} else if ( pathname == '/' ) {
 				var retVal = rtnType.TOMAIN;
-				callback( retVal )
+				callback( retVal );
 			}
 		});
 	}

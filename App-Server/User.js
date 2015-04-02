@@ -11,6 +11,7 @@ function User( uID, created, group, gList, status, condition ) {
 	//	SIGNUP_FILECREATED	: File is created for the user.
 	//	*** For now, it is used only for sign up.
     var password;
+    var userFileName;
 
 	this.getUserId = function() {
 		return userId;
@@ -64,6 +65,14 @@ function User( uID, created, group, gList, status, condition ) {
     
     this.getPassword = function() {
         return password;
+    }
+
+    this.setUserFileName = function( filename ) {
+    	userFileName = filename;
+    }
+
+    this.getUserFileName = function() {
+    	return userFileName;
     }
 }
 

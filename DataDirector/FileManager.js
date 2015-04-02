@@ -26,13 +26,14 @@ function FileManager() {
 		//		2. Filename is going to be the unique id of the post file.
 		//		3. And this filename is updated on the group file and user file.
 
-		var contents = fileContentManager.getUserFileContents( userInfo );
+		var contents = fileContentManager.getUserFileContents( newUser );
 		var filename = buildFileName( newUser );
 		fs.writeFile( "/usr/meta/" + filename, contents, function( err ) {
 			if( err ) {
-				callback( err );
+				callback( new Error( "File Creation Failed" ) );
 			} else {
-				callback( filename );
+				newUser.setUserFileName( filename );
+				callback( newUser );
 			}
 		});
 	}

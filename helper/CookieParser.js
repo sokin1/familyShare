@@ -1,5 +1,5 @@
 function CookieParser() {
-	function parseCookies( request ) {
+	this.parseCookies = function( request ) {
 	    var list = {},
 	        rc = request.headers.cookie;
 
