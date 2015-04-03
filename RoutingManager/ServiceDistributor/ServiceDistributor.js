@@ -23,7 +23,7 @@ function ServiceDistributor( appserver, canvas ) {
                 // It doesn't need to know which service is launched,
                 // and just do the service and return the retVal to paint the result.
 
-                // Cookies should contain minimum amount of information,
+                // DESC : Cookies should contain minimum amount of information,
                 //      NO PASSWORD, NO DETAIL INFORMATION
                 //      Only contains status and few flag information.
                 // And Cookies should be set in one of the painter functions before rendering.
