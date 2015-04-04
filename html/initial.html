@@ -5,6 +5,7 @@
     <body>
         <div class="header">
             <form id="loginForm" action="/" enctype="multipart/form-data" method="post">
+                <!-- Keep it for the future -->
                 <input type="hidden" name="type" value="login" />
                 Email : <input type="text" name="email" />
                 Password : <input type="password" name="password" />
@@ -14,6 +15,7 @@
         <div class="content">
             <div id="signup">
                 <form id="signupForm" action="/" enctype="multipart/form-data" method="post">
+                    <!-- Keep it for the future -->
                     <input type="hidden" name="type" value="signup" />
                     <% if( errorNo == 1001 || errorNo == 1002 ) { %>
                         <font color="RED">Email</font> : <input type="email" name="email" />

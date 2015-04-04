@@ -1,7 +1,7 @@
 var fs = require( "fs" );
 var ejs = require( "ejs" );
-var User = require( "./User" );
-var Error = require( "./Error" );
+var User = require( "../App-Server/User" );
+var Error = require( "../type/Error" );
 
 function Canvas() {
     this.renderInitial = function( response, state ) {

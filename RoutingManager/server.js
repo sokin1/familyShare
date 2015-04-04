@@ -1,8 +1,8 @@
 var http = require( "http" );
 var url = require( "url" );
-var AppServerWrapper = require( "/App-Server/AppServerWrapper" );
+var AppServerWrapper = require( "../App-Server/AppServerWrapper" );
 var ServiceDistributor = require( "./ServiceDistributor/ServiceDistributor" );
-var Canvas = require( "/Canvas/Canvas" );
+var Canvas = require( "../Canvas/Canvas" );
 
 function start( route ) {
     var app_server = new AppServerWrapper();

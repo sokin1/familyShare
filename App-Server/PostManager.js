@@ -44,4 +44,4 @@ function PostManager() {
 	}
 }
 
-exports.PostManager = PostManager;
+module.exports = PostManager;

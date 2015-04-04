@@ -16,9 +16,9 @@ function CryptoManager() {
 		var password = 'W1Ornr123';
 		var decipher = crypto.createDecipher( algorithm, password );
 		var decrypted = decipher.update( enc_text, 'utf8', 'hex' );
-		var orig_text += decipher.final( 'hex' );
+		decrypted += decipher.final( 'hex' );
 
-		return orig_text;
+		return decrypted;
 	}
 
 	// NO decryptPasswd required.
@@ -31,3 +31,5 @@ function CryptoManager() {
 		return cryptedPasswd
 	}
 }
+
+module.exports = CryptoManager;

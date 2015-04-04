@@ -1,4 +1,4 @@
-var server = require( "./server" );
-var router = require( "./router" );
+var server = require( "./RoutingManager/server" );
+var router = require( "./RoutingManager/router" );
 
 server.start( router.route );

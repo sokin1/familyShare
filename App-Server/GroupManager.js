@@ -62,4 +62,4 @@ function GroupManager() {
 	}
 }
 
-exports.GroupManager = GroupManager;
+module.exports = GroupManager;

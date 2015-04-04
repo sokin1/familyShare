@@ -41,3 +41,5 @@ function Post( uname, gname, when, title, contents ) {
 
 	}
 }
+
+module.exports = Post

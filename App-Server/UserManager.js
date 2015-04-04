@@ -1,6 +1,6 @@
-var rtnType = require( "/type/ReturnType.js" );
-var errType = require( "/type/ErrorType.js" );
-var CookieParser = require( "/helper/CookieParser.js" );
+var rtnType = require( "../type/Return.js" );
+var errType = require( "../type/Error.js" );
+var CookieParser = require( "../helper/CookieParser.js" );
 
 // TODO : Delete ServiceDispatcher.
 //		: 
@@ -72,4 +72,4 @@ function UserManager() {
 	}
 }
 
-exports.UserManager = UserManager;
+module.exports = UserManager;

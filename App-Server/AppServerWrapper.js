@@ -1,17 +1,17 @@
-var RequestHandler = require( "./RequestHandler" );
+//var RequestHandler = require( "./RequestHandlers" );
 var GroupManager = require( "./GroupManager" );
 var PostManager = require( "./PostManager" );
-var DBManager = require( "./DBManager" );
-var FileManager = require( "./FileManager" );
+var DBManager = require( "../DataDirector/DBManager" );
+var FileManager = require( "../DataDirector/FileManager" );
 var UserManager = require( "./UserManager" );
 
 function AppServerWrapper() {
-    var requestHandler = new RequestHandler();
-    var groupManager = new GroupManager();
-    var postManager = new PostManager();
-    var dbManager = new DBManager();
-    var fileManager = new FileManager();
-    var userManager = new UserManager();
+//    var requestHandler = new RequestHandler();
+    this.groupManager = new GroupManager();
+    this.postManager = new PostManager();
+    this.dbManager = new DBManager();
+    this.fileManager = new FileManager();
+    this.userManager = new UserManager();
 }
 
-exports.AppServerWrapper = AppServerWrapper;
+module.exports = AppServerWrapper;

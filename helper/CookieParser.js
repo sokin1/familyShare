@@ -12,4 +12,4 @@ function CookieParser() {
 	}
 }
 
-exports.CookieParser = CookieParser;
+module.exports = CookieParser;

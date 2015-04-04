@@ -2,4 +2,4 @@ function Group() {
 	
 }
 
-exports.Group = Group;
+module.exports = Group;

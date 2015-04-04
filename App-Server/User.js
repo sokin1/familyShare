@@ -76,4 +76,4 @@ function User( uID, created, group, gList, status, condition ) {
     }
 }
 
-exports.User = User;
+module.exports = User;

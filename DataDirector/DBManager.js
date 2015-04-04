@@ -1,18 +1,18 @@
-var mysql = require( 'mysql' );
-var User = require( "./User" );
+//var mysql = require( 'mysql' );
+var User = require( "../App-Server/User" );
 
 function DBManager() {
-    var db = mysql.createConnection({
-        host : 'localhost',
-        port : '3306',
-        user : 'dbadmin',
-        password : 'W1Ornr123',
-        database : 'FamilyShare'
-    });
+    // var db = mysql.createConnection({
+    //     host : 'localhost',
+    //     port : '3306',
+    //     user : 'dbadmin',
+    //     password : 'W1Ornr123',
+    //     database : 'FamilyShare'
+    // });
 
-    db.connect( function( err ) {
-        if( err ) throw err;
-    });
+    // db.connect( function( err ) {
+    //     if( err ) throw err;
+    // });
 
     this.request = function() {
         
@@ -22,39 +22,40 @@ function DBManager() {
         var key1 = userInfo['ID'];
         var key2 = userInfo['password'];
 
-        db.query( 'SELECT * FROM User WHERE userName = ? AND password = ?', [key1, key2], function( err, rows, fields ) {
-            if( err ) callback( err, new Error( 'DBERROR-Cannot Run Query' ) );
-            else {
-                if( rows.length == 1 ) {
-                    callback( null, new User( key1, false ) );
-                } else if( rows.length == 0 ) {
-                    callback( null, new Error( 'No Such User' ) );
-                } else {
-                    callback( null, new Error( 'DBERROR-Too Many Results' ) );
-                }
-            }
-        });
+        // db.query( 'SELECT * FROM User WHERE userName = ? AND password = ?', [key1, key2], function( err, rows, fields ) {
+        //     if( err ) callback( err, new Error( 'DBERROR-Cannot Run Query' ) );
+        //     else {
+        //         if( rows.length == 1 ) {
+        //             callback( null, new User( key1, false ) );
+        //         } else if( rows.length == 0 ) {
+        //             callback( null, new Error( 'No Such User' ) );
+        //         } else {
+        //             callback( null, new Error( 'DBERROR-Too Many Results' ) );
+        //         }
+        //     }
+        // });
     }
 
     this.setUserInfo = function( newUser, callback ) {
         var post = { userName : newUser['ID'], password : newUser['password'] };
         var key = userId;
 
-        db.query( 'SELECT * FROM User WHERE userName = ?', [key], function( err, rows, fields ) {
-            if( err ) callback( err, null );
-            if( rows.length >= 1 ) {
-                callback( new Error( "Existing User" ) );
-            } else {
-                db.query( 'INSERT INTO User SET ?', post, function( err, result ) {
-                    if( err ){
-                        callback( err );
-                    } else {
-                        newUser.setConCondition( "SIGNUP_REGISTERED" );
-                        callback( newUser );
-                    }
-                });
-            }
-        });
+        // db.query( 'SELECT * FROM User WHERE userName = ?', [key], function( err, rows, fields ) {
+        //     if( err ) callback( err, null );
+        //     if( rows.length >= 1 ) {
+        //         callback( new Error( "Existing User" ) );
+        //     } else {
+        //         db.query( 'INSERT INTO User SET ?', post, function( err, result ) {
+        //             if( err ){
+        //                 callback( err );
+        //             } else {
+        //                 newUser.setConCondition( "SIGNUP_REGISTERED" );
+        //                 callback( newUser );
+        //             }
+        //         });
+        //     }
+        // });
+        callback( newUser );
     }
 
     this.getGroupInfo = function( user, callback ) {
@@ -65,4 +66,4 @@ function DBManager() {
     }
 }
 
-exports.DBManager = DBManager;
+module.exports = DBManager;

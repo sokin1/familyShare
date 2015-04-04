@@ -1,14 +1,14 @@
 // RULE : NO ACCESS TO DB from FileManager. It only accesses to file
-var fileContentManager = require( "/DataDirector/FileContentManager" );
-var cypherManager = require( "/App-Server/CypherManager" );
+var fileContentManager = require( "./FileContentManager" );
+var cypherManager = require( "../helper/CryptoManager" );
 var fs = require( 'fs' );
 
 function FileManager() {
 	var buildFileName = function( info ) {
-        if( info isinstanceof User ) {
+        if( info instanceof User ) {
             var fileName = info.getUserId() + "_" + info.getCreatedAt() + ".usr";
             var pin = info.getPassword();
-        } else if( info isinstanceof Group ) {
+        } else if( info instanceof Group ) {
             var fileName = info.getGroupId() + "_" + info.getCreatedAt() + ".grp";
             var pin = info.getGroupName();
         }
@@ -38,7 +38,7 @@ function FileManager() {
 		});
 	}
 
-	thie.createFileForGroup = function( groupInfo, callback ) {
+	this.createFileForGroup = function( groupInfo, callback ) {
 		var contents = contentGenerator.getGroupFileContents( groupInfo );
 		var filename = cryptoManager.encryptString( groupInfo );
 		fs.writeFile( "/grp/meta/" + filename, contents, function( err ) {
@@ -87,4 +87,4 @@ function FileManager() {
 	}
 }
 
-exports.FileManager = FileManager;
+module.exports = FileManager;
