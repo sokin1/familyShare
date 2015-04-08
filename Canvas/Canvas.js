@@ -17,30 +17,23 @@ function Canvas() {
             "isModified=false"]
         );
 
-        if( state == null ) {   // First page.
-            fs.readFile( "./html/initial.html", 'utf-8', function( err, text ) {
-                var renderedHtml = ejs.render( text, { errorNo: 0 } );
-                response.write( renderedHtml );
-                response.end();
-            });
-        } else if( state instanceof Error ) {   // Error in login or sign up
-            response.writeHead( 200, { "Content-Type": "text/html" } );
+        if( state instanceof Error ) {   // First page.
             fs.readFile( "./html/initial.html", 'utf-8', function( err, text ) {
                 var renderedHtml = ejs.render( text, { errorNo: state.getErrorNo() } );
                 response.end( renderedHtml );
             });
         } else {
-            // If you are here, that means you are logged out.
-            response.writeHead( 200, { "Content-Type": "text/html" } );
             fs.readFile( "./html/initial.html", 'utf-8', function( err, text ) {
                 var renderedHtml = ejs.render( text, { errorNo: 0 } );
-                response.write( resnderedHtml );
-                response.end();
+                response.end( renderedHtml );
             });
         }
     }
 
     // TODO : Need to do something about it.
+    // TODO : New user configuration will be done in this page.
+    //        New user will set his nick name and additional information
+    //        Those are stored in DB and Cookie.
     this.renderSetupPage = function( response, user ) {
         var curTime = new Date();
         var currentTime = curTime.getTime();
@@ -59,22 +52,45 @@ function Canvas() {
         });
     }
 
-    this.renderMain = function( response, user, userFile, group, groupFile ) {
+    // TODO : TOO MANY PARAMETERS
+    //      : Main page is supposed to show,
+    //          basic user info on the left.
+    //              retrieved from the user object.
+    //                  acquired from db-read
+    //          basic group info on the right.
+    //              retrieved from the group object
+    //                  acquried from db-read
+    //          posts on the group in the middle.
+    //              retrieved from groupFile object.
+    //                  Need to specify this part further.
+    //                  If groupFile object is containing all posts on the group,
+    //                  it will get too big, and will take forever to retrieving.
+    //                  Good to have references of posts files, for example.
+    this.renderMain = function( response, user, group ) {
         var curTime = new Date();
         var currentTime = curTime.getTime();
         response.writeHead( 200, {
             "Set-Cookie": "userName=" + user.getUserName() + "," +
                           "groupName" + group.getGroupName() + "," +
-                          "fileName" + file.getFileName() + "," +
                           "verified=true," +
                           "lastLogin=" + currentTime + "," +
-                          "lastModified=" + currentTime + "," +
                           "isModified=false",
             "Content-Type": "text/html" } );
+
+        var renderingParams = {
+            username: user.getUserName(),
+            groupname: group.getGroupName(),
+
+        };
+
         fs.readFile( "./html/main.html", 'utf-8', function( err, text ) {
-            var renderedHtml = ejs.render( text, { username: userName, groupname: groupName } );
+            var renderedHtml = ejs.render( text, renderingParams );
             response.end( renderedHtml );
         });
+    }
+
+    var renderLeft = function( response ) {
+
     }
 
     this.renderStylesheet = function( response, pathname ) {

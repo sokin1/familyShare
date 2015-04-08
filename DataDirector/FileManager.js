@@ -38,6 +38,15 @@ function FileManager() {
 		});
 	}
 
+	// WHAT IT TAKES :
+	//					1. List of userList file of the group.
+	//					2. List of posts files of the group.
+	// FORMAT :
+	//					{
+	//						'HashedGroupKey': "hashed group key value",
+	//						'userFiles': [hashedFileName1, hashedFileName2, ...],
+	//						'postFiles': [hashedFileName1, hashedFileName2, ...]
+	//					}
 	this.createFileForGroup = function( groupInfo, callback ) {
 		var contents = contentGenerator.getGroupFileContents( groupInfo );
 		var filename = cryptoManager.encryptString( groupInfo );
@@ -50,8 +59,15 @@ function FileManager() {
 		});
 	}
 
+	// TODO_FUTURE : Need some kind of well distributed file management system to act as the director of all files.
 	// post : wrapper object indicating posted item, and is used to make post procedure efficient.
-	this.createPostFile = function( username, groupname, post ) {
+	// WHAT IT TAKES :
+	//					1. list of post files for the group.
+	// FORMAT :
+	//					{
+	//						'post': [hashedFileName1, hashedFileName2, ...]
+	//					}
+	this.createPostListFile = function( group ) {
 		var contents = contentGenerator.getPostContent( post );
 		var filename = cryptoManager.encryptString( post );
 		fs.writeFile( "/post/" + userDir + "/", contents, function( err ) {
@@ -63,8 +79,7 @@ function FileManager() {
 		});
 	}
 
-	// These two functions will be triggered by post function from postManager.
-	this.updateUserFile = function( username, postID ) {
+	this.createPostFile = function( post ) {
 
 	}
 
@@ -72,14 +87,23 @@ function FileManager() {
 
 	}
 
-	// Retrieve only recent 20 post files from the group file.
-	this.getPostsFromGroup = function( groupname ) {
+	var get1PostFromFile = function( postFile ) {
+		// use FileContentManager for retrieving contents from the file set.
+		// TODO : FileContentManger will manage hash/unhash contents in the future.
+	}
 
+	var getAllPostFromFiles = function( postFileList ) {
+		var posts = []
+		for( postFile in postFileList ) {
+			posts.add( get1PostFromFile( postFile ) );
+		}
+
+		return posts
 	}
 
 	// Retrieve only recent 20 post files from the group file.
-	this.getPostsFromUser = function( groupname ) {
-
+	this.getPostsFromGroup = function( groupname ) {
+		
 	}
 
 	this.getImageFromServer = function( imageFilePath ) {
