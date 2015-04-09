@@ -5,17 +5,11 @@ var Error = require( "../type/Error" );
 
 function Canvas() {
     this.renderInitial = function( response, state ) {
+        var cookies = new CookieParser.generateCookies( null, null );
+
         response.statusCode = 200;
         response.setHeader( "Content-Type", "text/html" );
-        response.setHeader( "Set-Cookie", [ 
-            "userName=none",
-            "groupName=none",
-            "fileName=none",
-            "verified=false",
-            "lastLogin=null",
-            "lastModified=null",
-            "isModified=false"]
-        );
+        response.setHeader( "Set-Cookie", cookies );
 
         if( state instanceof Error ) {   // First page.
             fs.readFile( "./html/initial.html", 'utf-8', function( err, text ) {
@@ -80,7 +74,7 @@ function Canvas() {
         var renderingParams = {
             username: user.getUserName(),
             groupname: group.getGroupName(),
-
+            posts: group.get
         };
 
         fs.readFile( "./html/main.html", 'utf-8', function( err, text ) {
