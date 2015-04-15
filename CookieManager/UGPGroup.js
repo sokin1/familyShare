@@ -1,7 +1,8 @@
+// Package used for rendering main page
 function UGPGroup( u, g, p ) {
 	var user = u;
 	var group = g;
-	var post = p;
+	var posts[] = p;
 
 	this.getUser = function() {
 		return user;
@@ -12,6 +13,6 @@ function UGPGroup( u, g, p ) {
 	}
 
 	this.getPost = function() {
-		return post;
+		return posts;
 	}
 }

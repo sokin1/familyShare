@@ -1,11 +1,20 @@
-function Group( gName, gOwner, gPostFile, gCreatedAt ) {
+function Group( gID, gName, gOwner, status ) {
+	var groupId = gID;
 	var groupName = gName;
 	var groupOwner = gOwner;
-	var postFile = gPostFile;
-	var createdAt = gCreatedAt;
+	var curStatus = status;
+	// Status
+	//	Updated		: there are updates after you logged out.
 
 	// All setters are called by GroupManger when group is created.
 	// Getter are called by verified and authenticated users.
+	this.getGroupId = function() {
+		return groupId;
+	}
+
+	var setGroupId = function( gID ) {
+		groupId = gID;
+	}
 
 	var setGroupName = function( gName ) {
 		groupName = gName;
@@ -15,7 +24,7 @@ function Group( gName, gOwner, gPostFile, gCreatedAt ) {
 		return groupName;
 	}
 
-	this.setGroupOwner = function( gOwner ) {
+	var setGroupOwner = function( gOwner ) {
 		groupOwner = gOwner;
 	}
 
@@ -23,20 +32,12 @@ function Group( gName, gOwner, gPostFile, gCreatedAt ) {
 		return groupOwner;
 	}
 
-	this.setPostFile = function( gPostFile ) {
-		postFile = gPostFile;
+	var setCurStatus = function( status ) {
+		curStatus = status;
 	}
 
-	this.getPostFile = function() {
-		return postFile;
-	}
-
-	this.setCreatedAt = function( gCreatedAt ) {
-		createdAt = gCreatedAt;
-	}
-
-	this.getCreatedAt = function() {
-		return createdAt;
+	this.getCurStatus = function() {
+		return curStatus;
 	}
 }
 

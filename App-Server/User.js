@@ -1,9 +1,12 @@
-function User( uID, created, group, gList, status, condition ) {
+// 90% of times, it works with Cookies, 10% is login and signup procedures.
+function User( uID, uName, group, status, condition ) {
 	var userId = uID;
-	var createdAt = created;
+	var userName = uName;
 	var mainGroup = group;
-    var groupList = gList;
 	var curStatus = status;
+	// Status
+	//	null		: Currently logged in.
+	//	timestamp	: Not logged in( last logout time ) 
 	var conCondition = condition;
 	// CONDITION:
 	//	SIGNUP_VALIDATED 	: Succeeded until validation, encrypted password is created, but not registered into db.
@@ -11,18 +14,21 @@ function User( uID, created, group, gList, status, condition ) {
 	//	SIGNUP_FILECREATED	: File is created for the user.
 	//	*** For now, it is used only for sign up.
     var password;
-    var userFileName;
 
 	this.getUserId = function() {
 		return userId;
 	}
 
-	this.setCreatedAt = function( created ) {
-		createdAt = created;
+	this.setUserId = function( uID ) {
+		userId = uID;
 	}
 
-	this.getCreatedAt = function() {
-		return createdAt;
+	this.getUserName = function() {
+		return userName;
+	}
+
+	this.setUserName = function( uName ) {
+		userName = uName;
 	}
 
 	this.setMainGroup = function( group ) {
@@ -32,14 +38,6 @@ function User( uID, created, group, gList, status, condition ) {
 	this.getMainGroup = function() {
 		return mainGroup;
 	}
-
-	this.setGroupList = function( gList ) {
-		groupList = gList;
-	}
-    
-    this.getGroupList = function() {
-        return gList;
-    }
 
     this.setCurStatus = function( status ) {
     	curStatus = status;
@@ -65,14 +63,6 @@ function User( uID, created, group, gList, status, condition ) {
     
     this.getPassword = function() {
         return password;
-    }
-
-    this.setUserFileName = function( filename ) {
-    	userFileName = filename;
-    }
-
-    this.getUserFileName = function() {
-    	return userFileName;
     }
 }
 
