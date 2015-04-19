@@ -32,18 +32,18 @@ function CookieManager() {
 
 	// DESIGN : COOKIE Format
 	//			General:
-	//				verified=>[T/F]
-	//				cookieCreated=>[date:time]
+	//				verified=>[T/F]|
+	//				cookieCreated=>[date:time]|
 	//				status=>[status],
 	//			User:
-	//				userId=>[uID]
-	//				userName=>[uName]
-	//				lastLogin=>[date:time]
+	//				userId=>[uID]|
+	//				userName=>[uName]|
+	//				lastLogin=>[date:time]|
 	//				status=>[status],
 	//			Group:
-	//				groupId=>[gID]
-	//				groupName=>[gName]
-	//				groupOwner=>[gOwner]
+	//				groupId=>[gID]|
+	//				groupName=>[gName]|
+	//				groupOwner=>[gOwner]|
 	//				status=>[updated],
 	//			Post:
 	//				posts=>[postfile1,postfile2, ... , postfile20]
@@ -51,16 +51,18 @@ function CookieManager() {
 	    var cookies = {},
 	        body = request.headers.cookie;
 
-	    body && body.split(',').forEach( function( section ) {
-	    	var section_name = section.split( ':' );
-	    	cookies[section_name.shift().trim()] = {};
-	        section && section.split( '\n' ).forEach( function( element ) {
-	        	var parts = element.split( "=>" );
-	        	cookies[parts.shift().trim()] = decodeURI( parts.join( '=>' ) );
+	    body && body.split(",").forEach( function( section ) {
+	    	var section_name = section.split( ":" ).shift().trim();
+	    	var section_body = section.split( ":" )[1];
+	    	cookies[section_name] = {};
+	        section_body && section_body.split( "|" ).forEach( function( element ) {
+	        	var prop = element.split( "=>" );
+	        	var prop_body = element.split( "=>" )[1];
+	        	cookies[section_name][prop.shift().trim()] = prop_body;
 	        });
 	    });
 
-	    return cookies;
+		return cookies;
 	}
 
 	this.retrieveInfoFromCookies = function( cookies ) {
@@ -68,7 +70,6 @@ function CookieManager() {
 		if( generalInfo['verified'] == 'NONE' || validateCookies( cookies ) == false ) {
 			return null;
 		} else {
-
 			var userCookie = cookies['User'];
 			var groupCookie = cookies['Group'];
 			var postCookie = cookies['Posts'];
@@ -82,40 +83,40 @@ function CookieManager() {
 	}
 
 	var cookiesForStranger = function() {
-		return "General:\n
-						verified=>NONE\n
-						cookieCreated=>" + new Date().getTime() + "\n
-						status=>NOCOOKIE,";
+		return "General:" +
+						"verified=>NONE|" +
+						"cookieCreated=>" + new Date().getTime() + "|" +
+						"status=>NOCOOKIE,";
 	}
 
 	var cookiesForBeginner = function( user ) {
-		return "General:\n
-						verified=>TRUE\n
-						cookieCreated=>" + new Date().getTime() + "\n
-						status=>ONSIGNUP,\n
-				User:\n
-						UserId=>" + user.getUserId() + "\n
-						userName=>" + user.getUserName() + "\n
-						lastLogin=>" + user.getCurStatus() + "\n
-						status=>" + user.getConCondition() + ",";
+		return "General:" + 
+						"verified=>TRUE|" +
+						"cookieCreated=>" + new Date().getTime() + "|" +
+						"status=>ONSIGNUP," +
+			   "User:" +
+						"UserId=>" + user.getUserId() + "|" +
+						"userName=>" + user.getUserName() + "|" +
+						"lastLogin=>" + user.getCurStatus() + "|" +
+						"status=>" + user.getConCondition() + ",";
 	}
 
 	// TODO : post should be set here in the future.
 	var cookiesForUser = function( user, group ) {
-		return "General:\n
-						verified=>TRUE\n
-						cookieCreated=>" + new Date().getTime() + "\n
-						status=>LOGIN,\n
-				User:\n
-						UserId=>" + user.getUserId() + "\n
-						userName=>" + user.getUserName() + "\n
-						lastLogin=>" + user.getCurStatus() + "\n
-						status=>" + user.getConCondition() + ",\n
-				Group:\n
-						groupId=>" + group.getGroupId() + "\n
-						groupName=>" + group.getGroupName() + "\n
-						groupOwner=>" + group.getGroupOwner() + "\n
-						status=>" + group.getCurStatus() + ",";
+		return "General:" + 
+						"verified=>TRUE|" +
+						"cookieCreated=>" + new Date().getTime() + "|" +
+						"status=>LOGIN," +
+			   "User:" +
+						"UserId=>" + user.getUserId() + "|" +
+						"userName=>" + user.getUserName() + "|" +
+						"lastLogin=>" + user.getCurStatus() + "|" +
+						"status=>" + user.getConCondition() + "," +
+			   "Group:" +
+						"groupId=>" + group.getGroupId() + "|" +
+						"groupName=>" + group.getGroupName() + "|" +
+						"groupOwner=>" + group.getGroupOwner() + "|" +
+						"status=>" + group.getCurStatus() + ",";
 	}
 
 	// DESIGN : Cookie is json format. Parents are "User", "Group", "Posts".

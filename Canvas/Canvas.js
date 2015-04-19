@@ -29,16 +29,12 @@ function Canvas() {
     //        New user will set his nick name and additional information
     //        Those are stored in DB and Cookie.
     this.renderSetupPage = function( response, user ) {
-        var curTime = new Date();
-        var currentTime = curTime.getTime();
-        response.writeHead( 200, {
-            "Set-Cookie": "curStatus=setup," +
-                          "username=" + user.getUserName() + "," +
+        var cookies = new CookieParser.generateCookies( user, null );
 
-                          "verified=true," +
-                          "lastLogin=" + currentTime + "," +
-                          "lastModified=" + currentTime,
-            "Content-Type": "text/html" } );
+        response.statusCode = 200;
+        response.setHeader( "Content-Type", "text/html" );
+        response.setHeader( "Set-Cookie", cookies );
+
         fs.readFile( "./html/setup.html", 'utf-8', function( err, text ) {
             var renderedHtml = ejs.render( text );
             response.write( renderedHtml );
@@ -61,16 +57,15 @@ function Canvas() {
     //                  it will get too big, and will take forever to retrieving.
     //                  Good to have references of posts files, for example.
     this.renderMain = function( response, user, group ) {
-        var curTime = new Date();
-        var currentTime = curTime.getTime();
-        response.writeHead( 200, {
-            "Set-Cookie": "userName=" + user.getUserName() + "," +
-                          "groupName" + group.getGroupName() + "," +
-                          "verified=true," +
-                          "lastLogin=" + currentTime + "," +
-                          "isModified=false",
-            "Content-Type": "text/html" } );
+        var cookies = new CookieParser.generateCookies( user, group );
 
+        response.statusCode = 200;
+        response.setHeader( "Content-Type", "text/html" );
+        response.setHeader( "Set-Cookie", cookies );
+
+        // TODO : Figure out how to carry rendering parameters
+        //          IDEA : Separating centural, left, and right part.
+        //                 and passing different parameters.
         var renderingParams = {
             username: user.getUserName(),
             groupname: group.getGroupName(),
@@ -84,6 +79,14 @@ function Canvas() {
     }
 
     var renderLeft = function( response ) {
+
+    }
+
+    var renderRight = function( response ) {
+
+    }
+
+    var renderCenter = function( response ) {
 
     }
 
