@@ -15,13 +15,15 @@ function ServiceDistributor( appserver, canvas ) {
     this.distribute = function ( response, request, pathname ) {
         // TODO : Design decision : Getting cookie here? or in each services.
         // How to create and use global class for global functions.
-        var cookies = new CookieParser().parseCookies( request );
+        var cookieParser = new CookieParser();
+        var cookies = cookieParser.parseCookies( request );
 
         if( pathname != "/") {
             painter.renderUnknownPage( response );
         } else {
             // TODO : Eliminate the use of pathname, use cookie and request parameters instead.
-            if( cookies['verified'] == true ) {
+            var bValidate = cookieParser.validateCookies( cookies['general'] );
+            if( bValidate "TRUE" ) {
                 // DESC : This is the big picture of the application distributor.
                 // It doesn't need to know which service is launched,
                 // and just do the service and return the retVal to paint the result.
@@ -34,7 +36,8 @@ function ServiceDistributor( appserver, canvas ) {
                 //                   to prevent disperse cookie-related functions.
                 //                   and collect cookie-related functions in painter functions.
                 var ugpGroup = new CookieParser().retrieveInfoFromCookies( cookies );
-                painter.renderPage( response, cookies['user'] );
+                // TODO : Need distributor for renderers depends on what ugpGroup contains.
+                painter.renderPage( response, ugpGroup );
             } else {
                 painter.renderInitial( response );
             }
