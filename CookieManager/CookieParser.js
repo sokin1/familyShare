@@ -7,20 +7,19 @@ var UGPGroup = require( "./UGPGroup" );
 function CookieManager() {
 
 	this.validateCookies = function( cookieGeneral ) {
-		// if false, cookie will be cleared.
 		var curTime = new Date().getTime();
 		if( curTime - cookieGeneral['cookieCreated'] >= 1000000000 ) {
-			return false;
+			cookieGeneral['status'] = 'INVALID';
 		}
 		cookieGeneral['cookieCreated'] = curTime;
-		return true;
 	}
 
-	// DESIGN : COOKIE Format
+	// DESIGN : COOKIE Format **** MODIFIED ****
 	//			General:
 	//				verified=>[T/F/NONE]|
 	//				cookieCreated=>[date:time]|
-	//				status=>[status],
+	//				status=>[status]|
+	//				error=>[err_code],
 	//			User:
 	//				userId=>[uID]|
 	//				userName=>[uName]|

@@ -18,29 +18,24 @@ function ServiceDistributor( appserver, canvas ) {
         var cookieParser = new CookieParser();
         var cookies = cookieParser.parseCookies( request );
 
+        // TODO : NEED MAJOR REFACTORIZATION HERE.
         if( pathname != "/") {
             painter.renderUnknownPage( response );
         } else {
-            // TODO : Eliminate the use of pathname, use cookie and request parameters instead.
-            var bValidate = cookieParser.validateCookies( cookies['general'] );
-            if( bValidate "TRUE" ) {
-                // DESC : This is the big picture of the application distributor.
-                // It doesn't need to know which service is launched,
-                // and just do the service and return the retVal to paint the result.
+            // DESC : This is the big picture of the application distributor.
+            // It doesn't need to know which service is launched,
+            // and just do the service and return the retVal to paint the result.
 
-                // DESC : Cookies should contain minimum amount of information,
-                //      NO PASSWORD, NO DETAIL INFORMATION
-                //      Only contains status and few flag information.
-                // And Cookies should be set in one of the painter functions before rendering.
-                // DESIGN DECISION : cookie-related job should be done in one of the painter.
-                //                   to prevent disperse cookie-related functions.
-                //                   and collect cookie-related functions in painter functions.
-                var ugpGroup = new CookieParser().retrieveInfoFromCookies( cookies );
-                // TODO : Need distributor for renderers depends on what ugpGroup contains.
-                painter.renderPage( response, ugpGroup );
-            } else {
-                painter.renderInitial( response );
-            }
+            // DESC : Cookies should contain minimum amount of information,
+            //      NO PASSWORD, NO DETAIL INFORMATION
+            //      Only contains status and few flag information.
+            // And Cookies should be set in one of the painter functions before rendering.
+            // DESIGN DECISION : cookie-related job should be done in one of the painter.
+            //                   to prevent disperse cookie-related functions.
+            //                   and collect cookie-related functions in painter functions.
+            var ugpGroup = cookieParser.retrieveInfoFromCookies( cookies );
+            // TODO : Need distributor for renderers depends on what ugpGroup contains.
+            painter.dispatchRenderer( response, ugpGroup );
         }
     }
 }

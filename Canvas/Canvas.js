@@ -1,17 +1,36 @@
 var fs = require( "fs" );
 var ejs = require( "ejs" );
 var User = require( "../App-Server/User" );
+var Group = require( "../App-Server/Group" );
 var Error = require( "../type/Error" );
+var UGPGroup = require( "../CookieManager/UGPGroup" );
 
 function Canvas() {
-    this.renderInitial = function( response, state ) {
+
+    this.dispatchRenderer = function( response, data ) {
+        if( data == null ) {
+            renderInitial( response, null );
+        } else {
+            if( data['General']['status'] == 'NEW' || data['General']['status'] == 'INVALID' ) {
+                renderInitial( response, data );
+            } else if( data['General']['status'] == 'SIGNUP' ) {
+                renderSetupPage( response, data['User'] );
+            } else if( data['General']['status'] == 'USER' ) {
+                renderMain( response, data['User'], data['Group'] );
+            } else {
+                renderUnKnown( response );
+            }
+        }
+    }
+
+    var renderInitial = function( response, state ) {
         var cookies = new CookieParser.generateCookies( null, null );
 
         response.statusCode = 200;
         response.setHeader( "Content-Type", "text/html" );
         response.setHeader( "Set-Cookie", cookies );
 
-        if( state instanceof Error ) {   // First page.
+        if( state['General']['error'] instanceof Error ) {   // First page.
             fs.readFile( "./html/initial.html", 'utf-8', function( err, text ) {
                 var renderedHtml = ejs.render( text, { errorNo: state.getErrorNo() } );
                 response.end( renderedHtml );
@@ -28,7 +47,7 @@ function Canvas() {
     // TODO : New user configuration will be done in this page.
     //        New user will set his nick name and additional information
     //        Those are stored in DB and Cookie.
-    this.renderSetupPage = function( response, user ) {
+    var renderSetupPage = function( response, user ) {
         var cookies = new CookieParser.generateCookies( user, null );
 
         response.statusCode = 200;
@@ -56,7 +75,7 @@ function Canvas() {
     //                  If groupFile object is containing all posts on the group,
     //                  it will get too big, and will take forever to retrieving.
     //                  Good to have references of posts files, for example.
-    this.renderMain = function( response, user, group ) {
+    var renderMain = function( response, user, group ) {
         var cookies = new CookieParser.generateCookies( user, group );
 
         response.statusCode = 200;
