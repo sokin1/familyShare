@@ -2,41 +2,27 @@ var rtnType = require( "../type/Return.js" );
 var errType = require( "../type/Error.js" );
 var CookieParser = require( "../helper/CookieParser.js" );
 
-// TODO : Delete ServiceDispatcher.
-//		: 
 function UserManager() {
-	this.serviceDispatcher = function( request, pathname, appserver, callback ) {
-		var cookies = CookieParser.parseCookies( request );
-
-		request.on( 'data', function( data ) {
-            requestData += data.toString();
-        });
-
-        request.on( 'end', function() {
-        	var extractor = new FormExtractor();
-            var extractedInfo = extractor.extract( requestData );
-
-			if( pathname == 'signup' ) {
-				signup( extractedInfo, cookies, appserver, function( newUser ) {
-					if( newUser instanceof User ) {
-						CookieParser.updateCookies( request, newUser );
-					} else {
-						callback( retVal );
-					}
-				});
-			} else if ( pathname == 'login' ) {
-				login( extractedInfo, cookies, appserver, function() {
-					var retVal;
-					callback( retVal );
-				});
-			} else if ( pathname == '/' ) {
-				var retVal = rtnType.TOMAIN;
-				callback( retVal );
-			}
-		});
+	this.serviceDispatcher = function( extractedInfo, appserver, callback ) {
+		if( extractedInfo['type'] == 'signup' ) {
+			signup( extractedInfo, appserver, function( rtnVal ) {
+				if( rtnVal instanceof UGPGroup )
+					callback( null, rtnVal );
+				else
+					callback( retVal, null );
+			});
+		} else if ( extractedInfo['type'] == 'login' ) {
+			login( extractedInfo, cookies, appserver, function( rtnVal ) {
+				if( rtnVal instanceof UGPGroup )
+					callback( null, retVal );
+				else
+					callback( retVal, null );
+			});
+		}
+		// TODO: MORE TO GO.
 	}
 
-	var signup = function( extractedInfo, cookies, appserver, callback ) {
+	var signup = function( extractedInfo, appserver, callback ) {
 		var newUser = new User( extractedInfo['userId'], 'now', null, null, 0, null );
 		var validator = new Validator();
 		var valid = validator.validateSignup( newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'] );
@@ -64,7 +50,7 @@ function UserManager() {
 		}
 	}
 
-	var login = function( extractedInfo, cookies, appserver, callback ) {
+	var login = function( extractedInfo, appserver, callback ) {
 		// TODO : If cookie is valid and not expired, login is successful.
 		//      : If cookie is expired, call validator to access dbmanager.
 		//		: If cookie is not expired, go to the group page where the user were staying before logoff
