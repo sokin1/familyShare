@@ -23,38 +23,62 @@ function UserManager() {
 	}
 
 	var signup = function( extractedInfo, appserver, callback ) {
-		var newUser = new User( extractedInfo['userId'], 'now', null, null, 0, null );
-		var validator = new Validator();
-		var valid = validator.validateSignup( newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'] );
-		if( valid instanceof User ) {
+		var newUser = new User( null, extractedInfo['userId'], null, null, null );
+		new Validator().validateSignup( newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'] );
+		if( newUser instanceof User ) {
 			// valid should be the instance of User with updated password.
 			// TODO : Access to db to check duplicates and registration.
 			// 		: For testing purpose, db functions will be replaced with mock functionality.
-			appserver.dbManager.setUserInfo( valid, function( res ) {
-				if( res instanceof User ) {
+			appserver.dbManager.registerUser( newUser, function( err ) {
+				if( err != null ) {
 					// TODO : call filemanager and create file for user user.
 					//		: newUser is updated if registration is succeeded.
 					// 		: same as dbManager, replaced with mock functionality.
-					appserver.fileManager.createFileForUser( res, function( res ) {
+					appserver.fileManager.createFileForUser( newUser, function( err ) {
 						// Should update user infomation more specifically.
 						// TODO : Indicate his status to let the server know what should be done when he connects next time.
 						// 		: also write the user infomation on the cookie 
-						callback( res );
+						callback( newUser );
 					});
 				} else {
-					callback( res );
+					callback( err );
 				}
 			});
 		} else {
-			callback( res );
+			callback( newUser );
 		}
 	}
 
 	var login = function( extractedInfo, appserver, callback ) {
-		// TODO : If cookie is valid and not expired, login is successful.
-		//      : If cookie is expired, call validator to access dbmanager.
-		//		: If cookie is not expired, go to the group page where the user were staying before logoff
-		//		: IF cookie is expired, after renew cookie, go to main group page.
+		// DESIGN : If it comes here, that means cookie is not available, expired, or not valid.
+		var user = new User( null, extractedInfo['userId'], null, null,null );
+		new Validator().validateLogin( user, extractedInfo['passwd'] );
+		// TODO : THIS IS SCARY!!!! FIX IT!!
+		if( user instanceof User ) {
+			appserver.dbManager.getUserInfo( user, function( err ) {
+				if( err != null ) {
+					var mainGroup = user.getMainGroup();
+					if( mainGroup != null) {
+						var group = new Group( mainGroup, null, null, null );
+						appserver.dbManager.getGroupInfo( group, function( err ) {
+							if( err != null ) {
+								var posts = new Post();
+								appserver.fileManager.openFileForUser( user, function( err ) {
+								});
+							} else {
+								callback( err );
+							}
+						});
+					} else {
+						callback( user );
+					}
+				} else {
+					callback( err );
+				}
+			});
+		} else {
+			callback( user );
+		}
 	}
 }
 

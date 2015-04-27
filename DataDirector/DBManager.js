@@ -35,10 +35,10 @@ function DBManager() {
 
         // What about fields?
         db.query( 'SELECT * FROM User WHERE userName = ? AND password = ?', [key1, key2], function( err, rows, fields ) {
-            if( err ) callback( new Error( 'DBERROR-Cannot Run Query' ), null );
-            if else ( rows.length > 1 ) callback( new Error( 'DBERROR-Database crashed' ), null );
-            if else ( rows.length == 0 ) callback( new Error( 'USER-User is not registered' ), null );
-            else callback( null, rows );
+            if( err ) callback( new Error( 'DBERROR-Cannot Run Query' ) );
+            if else ( rows.length > 1 ) callback( new Error( 'DBERROR-Database crashed' ) );
+            if else ( rows.length == 0 ) callback( new Error( 'USER-User is not registered' ) );
+            else callback( rows );
         });
     }
 
@@ -48,12 +48,12 @@ function DBManager() {
         var key = userId;
 
         db.query( 'SELECT * FROM User WHERE userName = ?', [key], function( err, rows, fields ) {
-            if( err ) callback( new Error( "DBError-Cannot Run Query" ), null );
-            if( rows.length >= 1 ) callback( new Error( "USER-User Already Registered" ), null );
+            if( err ) callback( new Error( "DBError-Cannot Run Query" ) );
+            if( rows.length >= 1 ) callback( new Error( "USER-User Already Registered" ) );
             } else {
                 db.query( 'INSERT INTO User SET ?', post, function( err, result ) {
-                    if( err ) callback( new Error( 'DBError-Cannot Run Query' ), null );
-                    else callback( null, newUser );
+                    if( err ) callback( new Error( 'DBError-Cannot Run Query' ) );
+                    else callback( newUser );
                 });
             }
         });
