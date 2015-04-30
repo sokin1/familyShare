@@ -1,7 +1,7 @@
 var cryptoManager = require ( '/helper/cryptoManager.js' );
 
 function Validator() {
-	var.emailValidator = function( userEmail ) {
+	var emailValidator = function( userEmail ) {
 		// Do pattern matching with "userEmail" and compare it with original userEmail.
 		// If they are same then it is valid user email address
 		// If not, it is not valid format.
@@ -9,7 +9,7 @@ function Validator() {
 		return false;
 	}
 
-	var.passwordValidator = function( passwd, retypedPasswd ) {
+	var passwordValidator = function( passwd, retypedPasswd ) {
 		if( passwd == retypedPasswd ) {
 			return true;
 		}
@@ -42,6 +42,8 @@ function Validator() {
         } else {
             var cryptoManager = new CryptoManager();
             var encryptedPasswd = cryptoManager.encryptPasswd( user.getUserId(), user.getCreatedAt(), passwd );
+            user.setPassword( encryptedPasswd );
+            callback( user );
         }
 	}
 }

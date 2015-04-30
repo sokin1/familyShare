@@ -51,34 +51,30 @@ function UserManager() {
 
 	var login = function( extractedInfo, appserver, callback ) {
 		// DESIGN : If it comes here, that means cookie is not available, expired, or not valid.
-		var user = new User( null, extractedInfo['userId'], null, null,null );
-		new Validator().validateLogin( user, extractedInfo['passwd'] );
-		// TODO : THIS IS SCARY!!!! FIX IT!!
-		if( user instanceof User ) {
-			appserver.dbManager.getUserInfo( user, function( err ) {
-				if( err != null ) {
-					var mainGroup = user.getMainGroup();
-					if( mainGroup != null) {
-						var group = new Group( mainGroup, null, null, null );
-						appserver.dbManager.getGroupInfo( group, function( err ) {
+		var ugpGroup = new UGPGroup();
+		ugpGroup.setUser( null, extractedInfo['userId'], null, null, null );
+		// GOTTA OPTIMIZE THIS PART
+		// TODO : Procedure is separated into two part: user with group and post
+		//			first of all, user information is retrieved from db with group key in it.
+		//				*) Make it in a single query and in single function
+		//			And then get post file lists from file manager.
+		new Validator().validateLogin( ugpGroup, extractedInfo['passwd'], function( err ) {
+			if( err != null) {
+				appserver.dbManager.getUserInfo( ugpGroup, function( err ) {
+					if( err != null ) {
+						appserver.groupManager.retrieveGroupInfo( ugpGroup, function( err ) {
 							if( err != null ) {
-								var posts = new Post();
-								appserver.fileManager.openFileForUser( user, function( err ) {
+								appserver.postManager.getFileListForUser( ugpGroup, function( err ) {
 								});
-							} else {
-								callback( err );
 							}
 						});
-					} else {
-						callback( user );
 					}
-				} else {
-					callback( err );
-				}
-			});
-		} else {
-			callback( user );
-		}
+				});
+			}
+		});
+
+		if( err ) callback( err );
+		else callback( ugpGroup );
 	}
 }
 
