@@ -36,14 +36,16 @@ function Validator() {
 		}
 	}
 
-	this.validateLogin = function( user, passwd, callback ) {
+	this.validateLogin = function( ugpGroup, passwd, callback ) {
+		var user = ugpGroup.getUser();
+
         if( emailValidator( user.getUserId ) == false ) {
             callback( new Error( "InvalidEmailFormat" ) );
         } else {
             var cryptoManager = new CryptoManager();
             var encryptedPasswd = cryptoManager.encryptPasswd( user.getUserId(), user.getCreatedAt(), passwd );
             user.setPassword( encryptedPasswd );
-            callback( user );
+            callback( null );
         }
 	}
 }

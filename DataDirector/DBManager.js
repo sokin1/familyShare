@@ -1,4 +1,4 @@
-//var mysql = require( 'mysql' );
+var mysql = require( 'mysql' );
 var User = require( "../App-Server/User" );
 
 function DBManager() {
@@ -15,23 +15,33 @@ function DBManager() {
     };
 
     this.request = function( reqBody, callback ) {
-        if( reqBody.command == "REQ_GETUSERINFO" || reqBody.command == "REQ_LOGIN" ) {
-            getUserInfo( reqBody.subject, function( err, rows ) {
-                if( err ) callback( err, null );
-                else callback( null, new User( rows[''], rows[''], rows[''], rows[''], rows[''] ) );
+        if( reqBody.REQ_TYPE == "REQ_GETUSERINFO" || reqBody.REQ_TYPE == "REQ_LOGIN" ) {
+            getUserInfo( reqBody.PARAM, function( err, rows ) {
+                if( err ) callback( err );
+                else {
+                    var user = new User( rows[0]['userID'], rows[0]['userName'], rows[0]['mainGroup'], rows[0]['status'], rows[0]['condition'] );
+                    reqBody.PARAM.setUser( user );
+                    callback( null );
+                }
             });
-        } else if( reqBody.command == "REQ_SIGNUP" ) {
-            registerUser( reqBody, subject, function( err, rows ) {
+        } else if( reqBody.REQ_TYPE == "REQ_SIGNUP" ) {
+            registerUser( reqBody.PARAM, function( err, rows ) {
                 if( err ) callback( err, null );
-                else callback( null, new User( rows[''], rows[''], rows[''], rows[''], rows[''] ) );
+                else {
+                    var user = new User( rows[0]['userID'], rows[0]['userName'], rows[0]['mainGroup'], rows[0]['status'], rows[0]['condition'] );
+                    reqBody.PARAM.setUser( user );
+                    callback( null );
+                }
             });
         }
+        // TODO : Group and Post related requests are also handled here.
     }
 
-    var getUserInfo = function( userInfo, callback ) {
-        var key1 = userInfo['ID'];
+    var getUserInfo = function( ugpGroup, callback ) {
+        var user = ugpGroup.getUser();
+        var key1 = user.getUserId();
         // password should be encrypted before coming to here.
-        var key2 = userInfo['password'];
+        var key2 = user.getPassword();
 
         // What about fields?
         db.query( 'SELECT * FROM User WHERE userName = ? AND password = ?', [key1, key2], function( err, rows, fields ) {

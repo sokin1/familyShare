@@ -59,11 +59,11 @@ function UserManager() {
 		//				*) Make it in a single query and in single function
 		//			And then get post file lists from file manager.
 		new Validator().validateLogin( ugpGroup, extractedInfo['passwd'], function( err ) {
-			if( err != null) {
+			if( err == null) {
 				appserver.dbManager.getUserInfo( ugpGroup, function( err ) {
-					if( err != null ) {
+					if( err == null ) {
 						appserver.groupManager.retrieveGroupInfo( ugpGroup, function( err ) {
-							if( err != null ) {
+							if( err == null ) {
 								appserver.postManager.getFileListForUser( ugpGroup, function( err ) {
 								});
 							}
