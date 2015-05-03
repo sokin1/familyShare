@@ -3,7 +3,20 @@ var fileContentManager = require( "./FileContentManager" );
 var cypherManager = require( "../helper/CryptoManager" );
 var fs = require( 'fs' );
 
+// DESIGN : No files for users and groups.
+//			Only for posts.
+//			Need to design further with data handling model.
 function FileManager() {
+	this.request = function( reqBody, callback ) {
+		if( reqBody.REQ_TYPE == 'REQ_GETFILELIST' ) {
+
+		} else if( reqBody.REQ_TYPE == 'REQ_WRITETOFILE' ) {
+
+		} else if( reqBODY.REQ_TYPE == 'REQ_READFROMFILE' ) {
+
+		}
+	}
+
 	var buildFileName = function( info ) {
         if( info instanceof User ) {
             var fileName = info.getUserId() + "_" + info.getCreatedAt() + ".usr";
@@ -15,7 +28,7 @@ function FileManager() {
 
         return cryptoManager.encryptString( fileName, pin );
 	}
-
+/*
 	this.createFileForUser = function( newUser, callback ) {
 		// create post file for new user.
 		// File name is acquired by hash username(email) additional information.
@@ -37,7 +50,8 @@ function FileManager() {
 			}
 		});
 	}
-
+*/
+/*
 	// WHAT IT TAKES :
 	//					1. List of userList file of the group.
 	//					2. List of posts files of the group.
@@ -58,6 +72,7 @@ function FileManager() {
 			}
 		});
 	}
+*/
 
 	// TODO_FUTURE : Need some kind of well distributed file management system to act as the director of all files.
 	// post : wrapper object indicating posted item, and is used to make post procedure efficient.

@@ -16,10 +16,11 @@ function DBManager() {
 
     this.request = function( reqBody, callback ) {
         if( reqBody.REQ_TYPE == "REQ_GETUSERINFO" || reqBody.REQ_TYPE == "REQ_LOGIN" ) {
-            getUserInfo( reqBody.PARAM, function( err, rows ) {
+            getUserGroupInfo( reqBody.PARAM, function( err, rows ) {
                 if( err ) callback( err );
                 else {
                     var user = new User( rows[0]['userID'], rows[0]['userName'], rows[0]['mainGroup'], rows[0]['status'], rows[0]['condition'] );
+                    var group = new Gruop( rows[0][''], rows[0][''], rows[0][''], rows[0][''], rows[0][''] );
                     reqBody.PARAM.setUser( user );
                     callback( null );
                 }
@@ -37,7 +38,8 @@ function DBManager() {
         // TODO : Group and Post related requests are also handled here.
     }
 
-    var getUserInfo = function( ugpGroup, callback ) {
+    // TODO : Think about a single query to retrieve both user and group information.
+    var getUserGroupInfo = function( ugpGroup, callback ) {
         var user = ugpGroup.getUser();
         var key1 = user.getUserId();
         // password should be encrypted before coming to here.

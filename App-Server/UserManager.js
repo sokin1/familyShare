@@ -60,21 +60,21 @@ function UserManager() {
 		//			And then get post file lists from file manager.
 		new Validator().validateLogin( ugpGroup, extractedInfo['passwd'], function( err ) {
 			if( err == null) {
-				appserver.dbManager.getUserInfo( ugpGroup, function( err ) {
+				var reqBody = new Request();
+				reqBody.REQ_TYPE = 'REQ_LOGIN';
+				reqBody.PARAM = ugpGroup;
+
+				// A single query will retrieve information on users and their group.
+				appserver.dbManager.request( reqBody, function( err ) {
 					if( err == null ) {
-						appserver.groupManager.retrieveGroupInfo( ugpGroup, function( err ) {
-							if( err == null ) {
-								appserver.postManager.getFileListForUser( ugpGroup, function( err ) {
-								});
-							}
+						appserver.postManager.getFileListForUser( ugpGroup, function( err ) {
+							if( err == null ) callback( ugpGroup );
+							else callback( err );
 						});
-					}
+					} else callback( err );
 				});
 			}
 		});
-
-		if( err ) callback( err );
-		else callback( ugpGroup );
 	}
 }
 
