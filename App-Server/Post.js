@@ -14,31 +14,52 @@
 //			2
 //			...
 
-function Post( uname, gname, when, title, contents ) {
-	var author = uname
-	var groupname = gname
-	var createdAt = when
+function Post( uId, gId, when, fName, content, comments ) {
+	var authorId = uId;
+	var groupId = gId;
+	var createdAt = when;
 
-	var filename
+	var filename = fName;
 
-	var title = title
-	var contents = contents
-	// No reply since this object is used only for creation of posts
+	var title = content['title'];
+	var body = content['body'];
+	var comments = comments;
 
+	// Parsing is done here.
 	this.getJsonFormatForPost = function() {
 
 	}
 
-	this.rtnHeader = function() {
-
+	this.getAuthorId = function() {
+		return authorId;
 	}
 
-	this.rtnBody = function() {
-
+	this.getGroupId = function() {
+		return groupId;
 	}
 
-	this.rtnPost = function() {
+	this.getCreatedAt = function() {
+		return createdAt;
+	}
 
+	this.getTitle = function() {
+		return title;
+	}
+
+	this.getBody = function() {
+		return body;
+	}
+
+	this.getComments = function() {
+		return comments;
+	}
+
+	this.getWrappedHeader = function() {
+		// TODO : return header information including authorId, groupId, and createdAt
+	}
+
+	this.getWrappedBody = function() {
+		// TODO : return body information including title, body, and comments.
 	}
 }
 
