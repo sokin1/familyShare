@@ -1,3 +1,5 @@
+// TODO : Implement basic functionalities first.
+//		: Then move on to the advanced ones.
 function PostManager() {
 	// This will access to DB and Files.
 	// DB to get user and group information before retrieving posts list.
@@ -29,10 +31,10 @@ function PostManager() {
 
 	}
 
-	// item is wrapped object containing subject, contents, and images
-	// used only for posting new item and editing item
-	this.postNewItem = function( userId, groupId, item ) {
-
+	this.postNewItem = function( post, callback ) {
+		// TODO : Generate new file with post variable.
+		//		: update post variable with filename
+		//		: access db to update post table.
 	}
 
 	this.editItem = function( userId, groupId, item ) {
@@ -41,6 +43,17 @@ function PostManager() {
 
 	this.deleteItem = function( userId, groupId, postId ) {
 		
+	}
+
+	var parsePostFile = function( ugpGroup, post ) {
+		// TODO : new Post object will be instantiated, and stuffed.
+		//		: new Comment object will also be instantiated, and stuffed in case there are comments.
+	}
+
+	var parsePostFiles = function( ugpGroup, postList ) {
+		for( var post in postList ) {
+			parsePostFile( ugpGroup, post );
+		}
 	}
 }
 

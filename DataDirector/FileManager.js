@@ -6,39 +6,33 @@ var fs = require( 'fs' );
 // DESIGN : No files for users and groups.
 //			Only for posts.
 //			Need to design further with data handling model.
+//			AND DON'T FORGET THIS IS FILEMANAGER, NOT POSTMANAGER.
 function FileManager() {
 	this.request = function( reqBody, callback ) {
+		// DESIGN : For File Creation, PARAM of request is Post object
 		if( reqBody.REQ_TYPE == 'REQ_CREATENEWFILE' ) {
+			createPostFile( reqBody.PARAM, function( rtn ) {
+				callback( rtn );
+			});
+		} else if( reqBody.REQ_TYPE == 'REQ_REMOVEFILE' ) {
+			getMostRecentPostList( reqBody.PARAM, function( rtn ) {
 
-		} else if( reqBody.REQ_TYPE == 'REQ_GETFILELIST' ) {
+			});
+		} else if( reqBody.REQ_TYPE == 'REQ_MODIFYFILE' ) {
+			writeToFile( reqBody.PARAM, function( err ) {
 
-		} else if( reqBody.REQ_TYPE == 'REQ_WRITETOFILE' ) {
-
-		} else if( reqBODY.REQ_TYPE == 'REQ_READFROMFILE' ) {
-
+			});
 		}
 	}
 
-	var buildFileName = function( info ) {
-        if( info instanceof User ) {
-            var fileName = info.getUserId() + "_" + info.getCreatedAt() + ".usr";
-            var pin = info.getPassword();
-        } else if( info instanceof Group ) {
-            var fileName = info.getGroupId() + "_" + info.getCreatedAt() + ".grp";
-            var pin = info.getGroupName();
-        }
-
-        return cryptoManager.encryptString( fileName, pin );
-	}
-
-	var getMostRecentPostList = function( post, callback ) {
+	var getMostRecentFileList = function( post, callback ) {
 		var posts = [];
 		// 1. Open file according to the path specified in post variable.( NO NEED TO ACCESS DB )
 		// 2. Do parsing for each file as posts element.
 		// 3. return posts variable.
 	}
 
-	var getMostRecentPost = function( post, callback ) {
+	var getMostRecentFile = function( post, callback ) {
 		var post;
 		// 1. open the most recent post( NO NEED TO ACCESS DB )
 		// 2. Do parsing it to post.
@@ -49,26 +43,23 @@ function FileManager() {
 		// TODO : Will be tricky.
 	}
 
-	var createPostFile = function( post, callback ) {
+	var buildFileName = function( post ) {
+		var bfEncrypted = post.getAuthorId() + post.getTitle() + post.getGroupId();
+		var afEncrypted = cryptoManager.encryptString( bfEncrypted );
+
+		return afEncrypted + "<$>" + post.createdAt() + "</$>";
+	}
+
+	var createNewFile = function( post, callback ) {
 		var contents = contentGenerator.getPostContent( post );
-		var filename = cryptoManager.encryptString( post );
-		fs.writeFile( "/post/" + filename, contents, function( err ) {
+		var filename = buildFileName( post );
+		var groupId = post.getGroupId();
+		var hashedGroupId = cryptoManager.encryptString( groupId );
+
+		fs.writeFile( "/" + hashedGroupId + "/post/" + filename, contents, function( err ) {
 			if( err ) callback( new Error( "Failed to create file" ) );
-			else {
-				callback( filename )
-			}
+			else callback( filename );
 		});
-	}
-
-	var addComment = function( post, callback ) {
-		var contents = contentGenerator.getComment( post );
-		var filename = post.getFilename();
-		// TODO : Need to figure out post file format and implement post file parser.
-
-	}
-
-	var removeComment = function( post, callback ) {
-		// TODO : Same as above.
 	}
 }
 

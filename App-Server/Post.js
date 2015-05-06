@@ -25,6 +25,14 @@ function Post( uId, gId, when, fName, content, comments ) {
 	var body = content['body'];
 	var comments = comments;
 
+	this.setFileName = function( fname ) {
+		filename = fname;
+	}
+
+	this.getFileName = function() {
+		return filename;
+	}
+
 	// Parsing is done here.
 	this.getJsonFormatForPost = function() {
 
