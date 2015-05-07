@@ -18,6 +18,7 @@ function ServiceDistributor( appserver, canvas ) {
         // How to create and use global class for global functions.
         var cookieParser = new CookieParser();
         var cookies = cookieParser.parseCookies( request );
+        var req = new Request();
 
         if( pathname != "/" ) painter.renderUnknownPage( response );
         else {
@@ -29,13 +30,14 @@ function ServiceDistributor( appserver, canvas ) {
 
                 request.on( 'end', function() {
                     var extractor = new FormExtractor();
-                    var extractedInfo = extractor.extract( requestData );
+                    // TODO : GOTTA FIX IT SINCE IT USES Request object
+                    var extractedInfo = extractor.extract( req, requestData );
                     var rtn = null;
 
-                    if( extractedInfo['type'] == 'start' ) {
-                    } else if( extractedInfo['type'] == 'signup' || extractedInfo['type'] == 'login' ) {
+                    if( req.REQ_TYPE == 'USR_START' ) {
+                    } else if( req.REQ_TYPE == 'USR_SIGNUP' || req.REQ_TYPE == 'USR_LOGIN' ) {
                         var userManager = new UserManager();
-                        userManager.serviceDispatcher( extractedInfo, appServer, function( err, ugp ) {
+                        userManager.serviceDispatcher( req, appServer, function( err, ugp ) {
                             rtn = ugp;
                         });
                     }

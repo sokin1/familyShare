@@ -1,63 +1,54 @@
-// Group only contains keys of users and items, not objects.
-// Group, Item, and Users are doesn't know each others.
-
-// Need to build Request/Response object wrapping up request/response information for every request done to DBManager.
-var GROUPLIST_REQ = 10001;
-var USERLIST_REQ = 10002;
-var USERREGISTRATION_REQ = 10003;
-var USERUNREGISTRATION_REQ = 10004;
-var GROUPREGISTRATION_REQ = 10005;
-var GROUPUNREGISTRATION_REQ = 10006;
-
+// TODO : Tier1 functionality
+//			-> create group
+//			-> send invitation
+//			-> choose group
+//			-> retrieve group info
+// 		: Tier2 functionality
+//			-> register user
+//			-> unregister user
+//			-> enter other group
+//			-> search group by name
+//		: Tier3 functionality
+//			-> messaging between group members
+//			-> broadcasting to members
 function GroupManager() {
-	this.getGroupList = function( userId ) {
+	// DESIGN : it doesn't do any role for login, little bit of work for sign up.
+	//			mostly, it will handle group related requests.
+	this.serviceDispatcher = function( req, appserver, callback ) {
+		if( req.REQ_TYPE == 'GRP_CREATEGROUP' ) {
+			// TODO : PARAM should be Group object
+		} else if( req.REQ_TYPE == 'GRP_SENDINVITATION' ) {
+			// TODO : PARAM should be Invitation object
+		} else if( req.REQ_TYPE == 'GRP_GETGROUPINFO' ) {
+			// TODO : PARAM should be Group object
+		} else if( req.REQ_TYPE == 'GRP_GETGROUPLIST' ) {
+			// TODO : PARAM should be User object
+		} else {
+
+		}
+	}
+
+	var createGroup = function( group, callback ) {
+		var req = new Request();
+		req.REQ_TYPE = 'DB_NEWGROUP';
+		req.PARAM = group;
+
+		appserver.dbManager.request( req, function( rtn ) {
+			if( rtn instanceof Error ) callback( rtn );
+			else callback( group );
+		});
+	}
+
+	var getGroupList = function( user ) {
 		// Access groupUser list to retrieve group name list
-		DBManager.request( GROUPLIST_REQ, userId, function( groupNameList ) {
-			if( groupNameList == null ) {
+		var groupList = [];
+
+		DBManager.request( req, function( rtn ) {
+			if( rtn instanceof Error)
+			else if( rtn == null ) {
 				return ERROR_NO_GROUP_AVAILABLE;
 			}
 			return groupNameList;
-		});
-	}
-
-	// return empty list for the group with 0 users.
-	// return null only if invalid group id( no group registered under id or requester doesn't belong to the group ).
-	this.getUserList = function( userId, groupId ) {
-		DBManager.request( USERLIST_REQ, groupId, function( userNameList ) {
-			if( userNameList == null ) {
-				return ERROR_INVALID_GROUP_ID;
-			}
-			return userNameList;
-		});
-	}
-
-	this.registerNewUser = function( userId, groupId ) {
-		DBManager.request( USERREGISTRATION_REQ, userId, groupId, function( error_msg, responseFromDB ) {
-			if( error_msg ) return error_msg;
-			return responseFromDB;
-		});
-	}
-
-	this.unregisterUser = function( userId, groupId ) {
-		DBManager.request( USERUNREGISTRATION_REQ, userId, groupId, function( error_msg, responseFromDB ) {
-			if( error_msg ) return error_msg;
-			return responseFromDB;
-		});
-	}
-
-	this.registerNewGroup = function( userId ) {
-		DBManager.request( GROUPREGISTRATION_REQ, userId, function( error_msg, groupId ) {
-			if( error_msg ) return error_msg;
-			return groupId;
-		});
-	}
-
-	// Only works when there is no user registered in the group.
-	// And should be performed by group owner.
-	this.unregisterGroup = function( userId, groupId ) {
-		DBManager.request( GROUPUNREGISTRATION_REQ, userId, groupId, function( error_msg, responseFromDB ) {
-			if( error_msg ) return error_msg;
-			return responseFromDB;
 		});
 	}
 }

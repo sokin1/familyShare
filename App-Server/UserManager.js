@@ -3,16 +3,16 @@ var errType = require( "../type/Error.js" );
 var CookieParser = require( "../helper/CookieParser.js" );
 
 function UserManager() {
-	this.serviceDispatcher = function( extractedInfo, appserver, callback ) {
-		if( extractedInfo['type'] == 'signup' ) {
-			signup( extractedInfo, appserver, function( rtnVal ) {
+	this.serviceDispatcher = function( req, appserver, callback ) {
+		if( req.REQ_TYPE == 'USR_SIGNUP' ) {
+			signup( req.PARAM, appserver, function( rtnVal ) {
 				if( rtnVal instanceof UGPGroup )
 					callback( null, rtnVal );
 				else
 					callback( retVal, null );
 			});
-		} else if ( extractedInfo['type'] == 'login' ) {
-			login( extractedInfo, cookies, appserver, function( rtnVal ) {
+		} else if ( req.REQ_TYPE == 'USR_LOGIN' ) {
+			login( req.PARAM, cookies, appserver, function( rtnVal ) {
 				if( rtnVal instanceof UGPGroup )
 					callback( null, retVal );
 				else
@@ -22,7 +22,8 @@ function UserManager() {
 		// TODO: MORE TO GO.
 	}
 
-	var signup = function( extractedInfo, appserver, callback ) {
+	// TODO : need to be revised since now we use Request instead of extractedInfo
+	var signup = function( req, appserver, callback ) {
 		var newUser = new User( null, extractedInfo['userId'], null, null, null );
 		new Validator().validateSignup( newUser, extractedInfo['passwd'], extractedInfo['retypedPasswd'] );
 		if( newUser instanceof User ) {
@@ -49,6 +50,7 @@ function UserManager() {
 		}
 	}
 
+	// TODO : need to be revised since now we use Request instead of extractedInfo
 	var login = function( extractedInfo, appserver, callback ) {
 		// DESIGN : If it comes here, that means cookie is not available, expired, or not valid.
 		var ugpGroup = new UGPGroup();
