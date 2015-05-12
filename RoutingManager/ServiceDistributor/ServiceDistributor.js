@@ -35,14 +35,21 @@ function ServiceDistributor( appserver, canvas ) {
                     var rtn = null;
 
                     if( req.REQ_TYPE == 'USR_START' ) {
-                    } else if( req.REQ_TYPE == 'USR_SIGNUP' || req.REQ_TYPE == 'USR_LOGIN' ) {
-                        var userManager = new UserManager();
-                        userManager.serviceDispatcher( req, appServer, function( err, ugp ) {
-                            rtn = ugp;
+                    } else if( req.REQ_TYPE == 'USR_LOGIN' ) {
+                        appServer.userManager.serviceDispatcher( req, appServer, function( err, ugp ) {
+                            if( err ) rtn = err;
+                            else rtn = ugp;
+
+                            painter.dispatchRenderer( response, rtn );
+                        });
+                    } else if( req.REQ_TYPE == 'USR_SIGNUP' ) {
+                        appServer.userManager.serviceDispatcher( req, appServer, function( err, ugp ) {
+                            if( err ) rtn = err;
+                            else rtn = ugp;
+
+                            painter.dispatchRenderer( response, rtn );
                         });
                     }
-
-                    painter.dispatchRenderer( response, rtn );
                 });
             } else {
                 // DESC : This is the big picture of the application distributor.
