@@ -17,12 +17,28 @@ function DBManager() {
     this.request = function( reqBody, callback ) {
         if( reqBody.REQ_TYPE == "REQ_GETUSERINFO" || reqBody.REQ_TYPE == "REQ_LOGIN" ) {
             getUserGroupInfo( reqBody.PARAM, function( err, rows ) {
-                if( err ) callback( err );
+                if( err ) {
+                    var res = new Response();
+                    res.STATUS = 'ERROR';
+                    res.RTNVAL = null;
+                    res.ERROR = new Error( err );
+
+                    callback( res );
+                }
                 else {
+                    var ugp = reqBody.PARAM;
                     var user = new User( rows[0]['userID'], rows[0]['userName'], rows[0]['mainGroup'], rows[0]['status'], rows[0]['condition'] );
                     var group = new Gruop( rows[0][''], rows[0][''], rows[0][''], rows[0][''], rows[0][''] );
-                    reqBody.PARAM.setUser( user );
-                    callback( null );
+
+                    ugp.setUser( user );
+                    ugp.setGroup( group );
+
+                    var res = new Response();
+                    res.STATUS = 'SUCCESS';
+                    res.RTNVAL = ugp;
+                    res.ERROR = null;
+
+                    callback( res );
                 }
             });
         } else if( reqBody.REQ_TYPE == "REQ_SIGNUP" ) {

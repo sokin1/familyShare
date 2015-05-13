@@ -60,23 +60,25 @@ function UserManager() {
 		//			first of all, user information is retrieved from db with group key in it.
 		//				*) Make it in a single query and in single function
 		//			And then get post file lists from file manager.
-		new Validator().validateLogin( ugpGroup, user.getPassword(), function( err ) {
-			if( err == null) {
+		new Validator().validateLogin( ugpGroup, user.getPassword(), function( res ) {
+			if( res.STATUS == 'SUCCESS' ) {
 				var reqBody = new Request();
 				reqBody.REQ_TYPE = 'REQ_LOGIN';
 				reqBody.PARAM = ugpGroup;
 
 				// A single query will retrieve information on users and their group.
 				// TODO : CHECK!! this part should be revised.
-				appserver.dbManager.request( reqBody, function( err ) {
-					if( err == null ) {
-						appserver.postManager.getFileListForUser( ugpGroup, function( err ) {
-							if( err == null ) callback( ugpGroup );
-							else callback( err );
+				appserver.dbManager.request( reqBody, function( res ) {
+					if( res.STATUS == 'SUCCESS' ) {
+						reqBody.REQ_TYPE = 'REQ_GETPOSTLIST';
+						reqBody.PARAM = res.RTNVAL;
+						appserver.postManager.getFileListForUser( reqBody, function( res ) {
+							if( res.STATUS == 'SUCCESS' ) callback( res.RTNVAL );
+							else callback( res.ERROR );
 						});
-					} else callback( err );
+					} else callback( res.ERROR );
 				});
-			}
+			} else callback( res.ERROR );
 		});
 	}
 }
